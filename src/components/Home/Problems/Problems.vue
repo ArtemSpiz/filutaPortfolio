@@ -1,0 +1,99 @@
+<script setup>
+import Light1 from '@/assets/svg/Light1.vue';
+import Light2 from '@/assets/svg/Light2.vue';
+import Light3 from '@/assets/svg/Light3.vue';
+
+import ProblemCard1 from '@/assets/svg/ProblemCard1.vue';
+import ProblemCard2 from '@/assets/svg/ProblemCard2.vue';
+import ProblemCard3 from '@/assets/svg/ProblemCard3.vue';
+import Section from '@/components/ui/Section/Section.vue';
+
+const ProblemCards = [
+  {
+    light: Light1,
+    icon: ProblemCard1,
+    title: 'Automated Scripts Break Easily',
+    text: 'Scripted tests break whenever your system changes, new flows, UI tweaks, or refactors make them fragile and expensive to maintain.',
+  },
+  {
+    light: Light2,
+    icon: ProblemCard2,
+    title: 'Missed Bugs in Real User Scenarios',
+    text: 'Edge cases and unexpected user journeys across your system often slip through manual tests, this can lead to critical issues in production.',
+  },
+  {
+    light: Light3,
+    icon: ProblemCard3,
+    title: 'Manual QA Is Too Slow and Expensive',
+    text: 'Traditional testing methods can’t keep up with fast release cycles. Every new build demands more manual effort, turning QA into a bottleneck instead of a safety net.',
+  },
+];
+
+import { ref, onMounted, onUnmounted } from 'vue';
+
+const windowWidth = ref(0);
+
+function updateWidth() {
+  if (process.client) {
+    windowWidth.value = window.innerWidth;
+  }
+}
+
+onMounted(() => {
+  if (process.client) {
+    windowWidth.value = window.innerWidth;
+    window.addEventListener('resize', updateWidth);
+  }
+});
+
+onUnmounted(() => {
+  if (process.client) {
+    window.removeEventListener('resize', updateWidth);
+  }
+});
+</script>
+<template>
+  <Section id="problems" title="The Problems Slowing You Down" text-wrap-class="" text-subtitle="">
+    <div
+      class="flex justify-center items-start gap-6 w-full flex-wrap max-xl:grid max-xl:grid-cols-ddd max-md:flex max-md:flex-col max-md:justify-center max-md:items-center"
+    >
+      <div
+        v-for="(card, index) in ProblemCards"
+        :key="index"
+        :class="[
+          'relative flex flex-col items-center gap-4 flex-1 p-12 pt-12 pb-8 self-stretch w-[315px] rounded-[20px] border border-[#2b2a30] max-xl:max-w-[420px] max-xl:w-full max-md:p-[32px] max-md:pt-[48px] max-md:h-[302px] max-md:flex-auto max-md:ml-auto mr-auto',
+          index === 1 ? 'bg-[#121619]' : index === 2 ? 'bg-[#121819]' : 'bg-[#141219]',
+
+          index === 2
+            ? windowWidth < 769
+              ? 'right-[0%]'
+              : windowWidth < 1285
+                ? 'right-[0%]'
+                : ''
+            : '',
+        ]"
+      >
+        <div class="absolute top-0 right-1/2 translate-x-1/2">
+          <component :is="card.light" active />
+        </div>
+
+        <div class="flex flex-col items-center gap-8 w-full">
+          <component :is="card.icon" />
+          <div
+            class="text-white text-center font-ibm text-[24px] font-normal leading-[130%] max-w-[250px] w-full max-md:text-[22px] max-sm:text-[20px] max-md:max-w-[220px]"
+          >
+            {{ card.title }}
+          </div>
+        </div>
+
+        <div
+          class="text-subtitle-color text-center font-ibm text-[16px] font-normal leading-[150%] max-md:w-[310px]"
+        >
+          {{ card.text }}
+        </div>
+      </div>
+    </div>
+  </Section>
+</template>
+
+<style></style>
